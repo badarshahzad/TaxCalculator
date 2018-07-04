@@ -1,0 +1,37 @@
+{
+  "name": "taxcalculator",
+  "version": "1.0.0",
+  "description": "Express Tutorial",
+  "main": "express.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badarshahzad/TaxCalculator.git"
+  },
+  "keywords": [
+    "Tax",
+    "Calculator",
+    "Node",
+    "NodeJs",
+    "Express",
+    "Income",
+    "Calculator"
+  ],
+  "author": "badarshahzad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/badarshahzad/TaxCalculator/issues"
+  },
+  "homepage": "https://github.com/badarshahzad/TaxCalculator#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
+}

@@ -1,4 +1,9 @@
 "use-strict";
+
+const salaryText = "50000 monthly salary"
+salaryText.indexOf("monthly") || salaryText.indexOf("month")> 0 ? yearlySalary = monthSalary * 12 :
+salaryText.indexOf("yearly") || salaryText.indexOf("year") ? yearlySalary = salaryText: message = "Please specify monthly or yearly salary!"
+
 var monthSalary = 50000;
 var yearlySalary = monthSalary * 12;
 // const yearlySalary = 6000000;
