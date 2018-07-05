@@ -2,7 +2,10 @@ const express = require('express');
 const MongoClient = require('mongodb');
 const bodyParser = require('body-parser');
 
-const taxCal = require('./TaxCalculate'); // function imports
+const MESSAGE = "Sorry, your request is not correct. Please, Correct your query to get results.";
+
+const taxCal = require('./TaxCalculate'); // function imports from utility of 2018-2019
+const taxCal2017 = require('./TaxCalculate1718'); // function imports from utility of 2017-2018
 
 const app = express();
 const port = 8000;
@@ -10,7 +13,7 @@ const port = 8000;
 // require('./app/routes')(app, {}); //imports it for use
 
 app.listen(port, () => {
-	console.log('We are live on '+ port);
+	console.log('We are live on ' + port);
 });
 
 /**
@@ -18,97 +21,141 @@ app.listen(port, () => {
  * incoming request stream and exposes it on req.body 
  */
 
-app.use(bodyParser.urlencoded({ extended: false })); 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
- /**
-  * Query of monthly, yearly, quarterly handling START
-  */
+/**
+ * Query of monthly, yearly, quarterly handling START
+ */
 
- app.post('/calculatetax', function(req, res){
+app.post('/calculatetax', function (req, res) {
 	var salary = 0;
-	
-	if(req.query.income === "monthly" ){
+	salary = req.body.income;
+
+	/**
+	 *  QUERY with two arguments 
+	 * 	{Salary type = month, yearly, quarterly }
+	 *  {Year =  2017, 2018}
+	 */
+
+	//REQUEST handle of single argument
+
+	//monthly + year
+	req.query.income === "monthly" && req.query.year == "2017" ?
+		res.send(taxCal2017.monthlySalaryCal(salary)) : // 2017 tax calculation process
+		req.query.income === "monthly" && req.query.year == "2018" ?
+			res.send(taxCal.monthlySalaryCal(salary)) : // 2018 tax calculation process
+			
+			//yearly + year
+			req.query.income === "yearly" && req.query.year == "2017" ?
+				res.send(taxCal2017.yearlySalaryCal(salary)) : // 2017 tax calculation process
+				req.query.income === "yearly" && req.query.year == "2018" ?
+					res.send(taxCal.yearlySalaryCal(salary)) : // 2018 tax calculation process
+				
+					//quarterly + year
+					req.query.income === "quarterly" && req.query.year == "2017" ?
+						res.send(taxCal2017.quarterlySalaryCal(salary)) : // 2017 tax calculation process
+						req.query.income === "quarterly" && req.query.year == "2018" ?
+							res.send(taxCal.quarterlySalaryCal(salary)) : // 2018 tax calculation process
+							res.send(MESSAGE); //send a message query is not correct
+
+
+
+
+
+	//REQUEST handle of single argument 
+
+	//montly
+	if (req.query.income === "monthly") {
 		// console.log("*************************Monthly query");
-		salary = req.body.income;
 		return res.send(taxCal.monthlySalaryCal(salary));
 	}
-	else if(req.query.income === "yearly" ){
+	//yearly
+	else if (req.query.income === "yearly") {
 		// console.log("*************************Yearly query");
-		salary = req.body.income;
 		return res.send(taxCal.yearlySalaryCal(salary));
 	}
-	else if (req.query.income === "quarterly"){ 
+	//quarterly
+	else if (req.query.income === "quarterly") {
 		// console.log("*************************Quarterly query");
-		salary = req.body.income;
 		return res.send(taxCal.quarterlySalaryCal(salary));
 	}
+	else {
+		res.send(MESSAGE); //send a message query is not correct
+	}
+
+
+
 });
 
-  /**
-  * Query of monthly, yearly, quarterly handling END
-  */
 
-app.get('/', function(req, res){
+
+/**
+* Query of monthly, yearly, quarterly handling END
+*/
+
+app.get('/', function (req, res) {
 	console.log(req);
 	res.send('Hi!');
 });
 
-app.get('/:badar', function(req, res){
+app.get('/:badar', function (req, res) {
 	var variable = req.params.badar;
-	res.send('Hi! '+variable);
+	res.send('Hi! ' + variable);
 	res.end(); // end the request when we are done handling with it
 });
 
 // I specify a param in our path for the GET of a specific object 
-app.get('/:salary/:salaryType', function(req, res){
+app.get('/:salary/:salaryType', function (req, res) {
 
 	let salaryType = req.params.salaryType;
 	let salary = req.params.salary;
 
-	if (salaryType === "month" || salaryType === "monthly"){
+	if (salaryType === "month" || salaryType === "monthly") {
 		return res.send(taxCal.monthlySalaryCal(salary));
 	}
-	else if(salaryType === "year" || salaryType === "yearly"){
+	else if (salaryType === "year" || salaryType === "yearly") {
 		return res.send(taxCal.yearlySalaryCal(salary));
 	}
-	else if(salaryType === "" || salaryType == "null"){
+	else if (salaryType === "" || salaryType === "null") {
 		return res.send(taxCal.monthlySalaryCal(salary));
+	} else {
+		return res.send(MESSAGE);
 	}
 	res.end();
 });
 
-app.post('/salary', function(req, res){
-	
+app.post('/salary', function (req, res) {
+
 	var salary = 0;
-	if( req.body.monthly != undefined){
+	if (req.body.monthly != undefined) {
 		salary = req.body.monthly;
 		return res.send(taxCal.monthlySalaryCal(salary));
 	}
-	else if (req.body.yearly != undefined){
+	else if (req.body.yearly != undefined) {
 		salary = req.body.yearly;
 		return res.send(taxCal.yearlySalaryCal(salary));
-	}else{
+	} else {
 		res.send("Salary Key is not correct!");
 	}
-	 	
+
 });
 
 /******************************************************************
  *  Yearly Salary Calculation Start with /monthly or /yearly  START
  */
 
-app.post('/monthly', function(req, res){
+app.post('/monthly', function (req, res) {
 	var salary = 0;
-	if( req.body.income != undefined){
+	if (req.body.income != undefined) {
 		salary = req.body.income;
 		return res.send(taxCal.monthlySalaryCal(salary));
 	}
 });
 
-app.post('/yearly', function(req, res){
+app.post('/yearly', function (req, res) {
 	var salary = 0;
-	if( req.body.income != undefined){
+	if (req.body.income != undefined) {
 		salary = req.body.income;
 		return res.send(taxCal.yearlySalaryCal(salary));
 	}
@@ -117,7 +164,7 @@ app.post('/yearly', function(req, res){
 /******************************************************************
  *  Yearly Salary Calculation Start with /monthly or /yearly  END
  */
- 
+
 // Attach router for the specific path
 // app.use('/salary', salaryRouter);
 
