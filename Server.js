@@ -2,7 +2,8 @@ const express = require('express');
 const MongoClient = require('mongodb');
 const bodyParser = require('body-parser');
 
-const taxCal = require('./TaxCalculate');
+const taxCal = require('./TaxCalculate'); // function imports
+
 const app = express();
 const port = 8000;
 

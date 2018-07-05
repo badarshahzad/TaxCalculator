@@ -78,6 +78,9 @@ return object;
   * Salary Tax Calculation END
   */
 
+  /**
+   * Exports the functions
+   */
 module.exports = {
   yearlySalaryCal,
   monthlySalaryCal,
