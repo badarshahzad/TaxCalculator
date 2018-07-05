@@ -41,27 +41,23 @@ app.post('/calculatetax', function (req, res) {
 	//REQUEST handle of single argument
 
 	//monthly + year
-	req.query.income === "monthly" && req.query.year == "2017" ?
-		res.send(taxCal2017.monthlySalaryCal(salary)) : // 2017 tax calculation process
-		req.query.income === "monthly" && req.query.year == "2018" ?
-			res.send(taxCal.monthlySalaryCal(salary)) : // 2018 tax calculation process
+	req.query.income === "monthly" && req.query.year == "2018" ?
+		res.send(taxCal2017.monthlySalaryCal(salary)) : // 2018 tax calculation process
+		req.query.income === "monthly" && req.query.year == "2019" ?
+			res.send(taxCal.monthlySalaryCal(salary)) : // 2019 tax calculation process
 			
 			//yearly + year
-			req.query.income === "yearly" && req.query.year == "2017" ?
-				res.send(taxCal2017.yearlySalaryCal(salary)) : // 2017 tax calculation process
-				req.query.income === "yearly" && req.query.year == "2018" ?
-					res.send(taxCal.yearlySalaryCal(salary)) : // 2018 tax calculation process
+			req.query.income === "yearly" && req.query.year == "2018" ?
+				res.send(taxCal2017.yearlySalaryCal(salary)) : // 2018 tax calculation process
+				req.query.income === "yearly" && req.query.year == "2019" ?
+					res.send(taxCal.yearlySalaryCal(salary)) : // 2019 tax calculation process
 				
 					//quarterly + year
-					req.query.income === "quarterly" && req.query.year == "2017" ?
-						res.send(taxCal2017.quarterlySalaryCal(salary)) : // 2017 tax calculation process
-						req.query.income === "quarterly" && req.query.year == "2018" ?
-							res.send(taxCal.quarterlySalaryCal(salary)) : // 2018 tax calculation process
+					req.query.income === "quarterly" && req.query.year == "2018" ?
+						res.send(taxCal2017.quarterlySalaryCal(salary)) : // 2018 tax calculation process
+						req.query.income === "quarterly" && req.query.year == "2019" ?
+							res.send(taxCal.quarterlySalaryCal(salary)) : // 2019 tax calculation process
 							res.send(MESSAGE); //send a message query is not correct
-
-
-
-
 
 	//REQUEST handle of single argument 
 
