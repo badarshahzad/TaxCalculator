@@ -2,12 +2,17 @@
  * Salary Tax calculation START
  *****************************/
 
-let monthlySalaryCal = (salary) =>{ //monthly salary
+let monthlySalaryCal = (salary) =>{ //monthly salary tax
 	let monthSalary = salary * 12;
 	return yearlySalaryCal(monthSalary);
 };
 
-let yearlySalaryCal = (yearlySalary) =>{ //yearly salary
+let quarterlySalaryCal = (salary) =>{ //quarterly salary tax
+  let quarterly = yearlySalaryCal(salary * 4);
+  return quarterly;
+}
+
+let yearlySalaryCal = (yearlySalary) =>{ //yearly salary tax
 let	monthSalary = yearlySalary / 12;
 var yearlyTax = 0;
 
@@ -75,5 +80,6 @@ return object;
 
 module.exports = {
   yearlySalaryCal,
-  monthlySalaryCal
+  monthlySalaryCal,
+  quarterlySalaryCal
 };

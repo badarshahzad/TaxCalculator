@@ -12,6 +12,42 @@ app.listen(port, () => {
 	console.log('We are live on '+ port);
 });
 
+/**
+ * body-parser extract the entire body portion of an 
+ * incoming request stream and exposes it on req.body 
+ */
+
+app.use(bodyParser.urlencoded({ extended: false })); 
+app.use(bodyParser.json());
+
+ /**
+  * Query of monthly, yearly, quarterly handling START
+  */
+
+ app.post('/calculatetax', function(req, res){
+	var salary = 0;
+	
+	if(req.query.income === "monthly" ){
+		// console.log("*************************Monthly query");
+		salary = req.body.income;
+		return res.send(taxCal.monthlySalaryCal(salary));
+	}
+	else if(req.query.income === "yearly" ){
+		// console.log("*************************Yearly query");
+		salary = req.body.income;
+		return res.send(taxCal.yearlySalaryCal(salary));
+	}
+	else if (req.query.income === "quarterly"){ 
+		// console.log("*************************Quarterly query");
+		salary = req.body.income;
+		return res.send(taxCal.quarterlySalaryCal(salary));
+	}
+});
+
+  /**
+  * Query of monthly, yearly, quarterly handling END
+  */
+
 app.get('/', function(req, res){
 	console.log(req);
 	res.send('Hi!');
@@ -21,14 +57,6 @@ app.get('/:badar', function(req, res){
 	var variable = req.params.badar;
 	res.send('Hi! '+variable);
 	res.end(); // end the request when we are done handling with it
-});
-
-// Create express router object for monthly or yearly tax calculation
-var salaryRouter = express.Router();	
-
-// A GET to the root of a resource returns a list of that resource
-salaryRouter.get('/', function(req, res){
-	// console.log(req);
 });
 
 // I specify a param in our path for the GET of a specific object 
@@ -49,7 +77,6 @@ app.get('/:salary/:salaryType', function(req, res){
 	res.end();
 });
 
-app.use(bodyParser.json());
 app.post('/salary', function(req, res){
 	
 	var salary = 0;
@@ -89,7 +116,7 @@ app.post('/yearly', function(req, res){
 /******************************************************************
  *  Yearly Salary Calculation Start with /monthly or /yearly  END
  */
-
+ 
 // Attach router for the specific path
 // app.use('/salary', salaryRouter);
 
