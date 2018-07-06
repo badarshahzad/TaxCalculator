@@ -2,7 +2,15 @@ const express = require('express');
 const MongoClient = require('mongodb');
 const bodyParser = require('body-parser');
 
-const MESSAGE = "Sorry, your request is not correct. Please, Correct your query to get results.";
+const MESSAGE_YEAR = {
+	message: "Sorry, your request is not correct. Year 2018 and 2019 is only supported."
+};
+const MESSAGE_INCOME = {
+	message: "Sorry, your request is not correct. Please, mentioned the income to get results."
+};
+const MESSAGE_GIVE_VALID_INPUT = {
+	message: "Sorry, your request is not correct. Please, Correct your query to get results."
+};
 
 const taxCal = require('./TaxCalculate'); // function imports from utility of 2018-2019
 const taxCal2017 = require('./TaxCalculate1718'); // function imports from utility of 2017-2018
@@ -38,47 +46,79 @@ app.post('/calculatetax', function (req, res) {
 	 *  {Year =  2017, 2018}
 	 */
 
-	//REQUEST handle of single argument
+	 console.log(req.query.year);
 
-	//monthly + year
-	req.query.income === "monthly" && req.query.year == "2018" ?
-		res.send(taxCal2017.monthlySalaryCal(salary)) : // 2018 tax calculation process
-		req.query.income === "monthly" && req.query.year == "2019" ?
-			res.send(taxCal.monthlySalaryCal(salary)) : // 2019 tax calculation process
-			
-			//yearly + year
-			req.query.income === "yearly" && req.query.year == "2018" ?
-				res.send(taxCal2017.yearlySalaryCal(salary)) : // 2018 tax calculation process
-				req.query.income === "yearly" && req.query.year == "2019" ?
-					res.send(taxCal.yearlySalaryCal(salary)) : // 2019 tax calculation process
-				
-					//quarterly + year
-					req.query.income === "quarterly" && req.query.year == "2018" ?
-						res.send(taxCal2017.quarterlySalaryCal(salary)) : // 2018 tax calculation process
-						req.query.income === "quarterly" && req.query.year == "2019" ?
-							res.send(taxCal.quarterlySalaryCal(salary)) : // 2019 tax calculation process
-							res.send(MESSAGE); //send a message query is not correct
+	if (req.query.income == undefined && req.query.year == undefined) {
+		res.send(MESSAGE_GIVE_VALID_INPUT);
+		res.end();
+	} else if ( (!(req.query.year == 2018 || req.query.year == 2019))
+			&& req.query.year != undefined ) {
+		res.send(MESSAGE_YEAR);
+		res.end();
+	} else if (req.query.income == undefined) {
+		res.send(MESSAGE_INCOME);
+		res.end();
+	} else {
+		
+		//monthly + year
+		req.query.income === "monthly" && req.query.year == "2018" ?
+			res.send(taxCal2017.monthlySalaryCal(salary)) : // 2018 tax calculation process
+			req.query.income === "monthly" && req.query.year == "2019" ?
+				res.send(taxCal.monthlySalaryCal(salary)) : // 2019 tax calculation process
+
+				//yearly + year
+				req.query.income === "yearly" && req.query.year == "2018" ?
+					res.send(taxCal2017.yearlySalaryCal(salary)) : // 2018 tax calculation process
+					req.query.income === "yearly" && req.query.year == "2019" ?
+						res.send(taxCal.yearlySalaryCal(salary)) : // 2019 tax calculation process
+
+						//quarterly + year
+						req.query.income === "quarterly" && req.query.year == "2018" ?
+							res.send(taxCal2017.quarterlySalaryCal(salary)) : // 2018 tax calculation process
+							req.query.income === "quarterly" && req.query.year == "2019" ?
+								res.send(taxCal.quarterlySalaryCal(salary)) : // 2019 tax calculation process
+
+								//REQUEST handle of single argument 
+
+								//monthly
+								req.query.income === "monthly" ?
+									res.send(taxCal.monthlySalaryCal(salary)) :
+
+									//yearly
+									req.query.income === "yearly" ?
+										res.send(taxCal.yearlySalaryCal(salary)) :
+
+										//quarterly
+										req.query.income === "quarterly" ?
+											res.send(taxCal.quarterlySalaryCal(salary)) :
+											console.log("**************************yes");
+		res.send(MESSAGE_GIVE_VALID_INPUT); // Message response incase of query incorrect
+		res.end();
+	
+	}
+
+
 
 	//REQUEST handle of single argument 
 
-	//montly
-	if (req.query.income === "monthly") {
-		// console.log("*************************Monthly query");
-		return res.send(taxCal.monthlySalaryCal(salary));
-	}
-	//yearly
-	else if (req.query.income === "yearly") {
-		// console.log("*************************Yearly query");
-		return res.send(taxCal.yearlySalaryCal(salary));
-	}
-	//quarterly
-	else if (req.query.income === "quarterly") {
-		// console.log("*************************Quarterly query");
-		return res.send(taxCal.quarterlySalaryCal(salary));
-	}
-	else {
-		res.send(MESSAGE); //send a message query is not correct
-	}
+	// //montly
+	// if (req.query.income === "monthly") {
+	// 	// console.log("*************************Monthly query");
+	// 	res.send(taxCal.monthlySalaryCal(salary));
+	// }
+	// //yearly
+	// else if (req.query.income === "yearly") {
+	// 	// console.log("*************************Yearly query");
+	// 	return res.send(taxCal.yearlySalaryCal(salary));
+	// }
+	// //quarterly
+	// else if (req.query.income === "quarterly") {
+	// 	// console.log("*************************Quarterly query");
+	// 	return res.send(taxCal.quarterlySalaryCal(salary));
+	// }
+	// else {
+	// 	res.send(MESSAGE); //send a message query is not correct
+	// }
 
 
 
